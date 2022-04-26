@@ -19,14 +19,16 @@
 # Build settings that are NOT module paths should appear in a
 # CONFIG_SITE file.
 
+PRODSUP=/gem_base/epics/support
+
 #CAPUTLOG=/usr/lib/epics
 
 # PCAS was unbundled from EPICS Base and is needed for building the
 # ca-gateway with EPICS 7
-#PCAS=/your/path/to/modules/pcas/
+PCAS=$(PRODSUP)/pcas/
 
 # EPICS_BASE usually appears last so other apps can override stuff:
-#EPICS_BASE=/usr/lib/epics
+EPICS_BASE=/gem_base/epics/epics-base
 
 # Set RULES here if you want to take build rules from somewhere
 # other than EPICS_BASE:
@@ -39,3 +41,4 @@
 
 -include $(TOP)/../RELEASE.local
 -include $(TOP)/configure/RELEASE.local
+-include $(TOP)/../RELEASE.$(EPICS_HOST_ARCH).local

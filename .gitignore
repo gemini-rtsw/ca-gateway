@@ -15,3 +15,5 @@ __pycache__
 # Gateway generated scriptlets
 gateway.killer
 gateway.restart
+/configure/RELEASE.local
+/configure/CONFIG_SITE.local
