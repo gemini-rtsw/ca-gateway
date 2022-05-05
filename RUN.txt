@@ -1,0 +1,1 @@
+./gateway -pvlist GATEWAY.pvlist -access GATEWAY.access -log tc1gateway.log -prefix tc1gate -no_cache -debug 1 -cip "172.17.2.133 172.17.2.36"

@@ -26,7 +26,7 @@ Source0: %{name}-%{version}.tar.gz
 ExclusiveArch: %{arch}
 Prefix: %{_prefix}
 ## You may specify dependencies here
-BuildRequires: epics-base-devel re2c gemini-ade psmisc pcas
+BuildRequires: epics-base-devel re2c gemini-ade psmisc pcas-devel
 Requires: epics-base pcas
 ## Switch dependency checking off
 # AutoReqProv: no
@@ -56,9 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp -r include $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp -r configure $RPM_BUILD_ROOT/%{_prefix}/%{name}
-
+cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
+cp RUN.txt $RPM_BUILD_ROOT/%{_prefix}/%{name}
+find $RPM_BUILD_ROOT/%{_prefix}/%{name}/configure -name ".git" -exec rm -rf {} \;
 
 %postun
 if [ "$1" = "0" ]; then
@@ -71,13 +71,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-   /%{_prefix}/%{name}/lib
    /%{_prefix}/%{name}/bin
+   /%{_prefix}/%{name}/lib
+   /%{_prefix}/%{name}/docs
 
 %files devel
 %defattr(-,root,root)
-   /%{_prefix}/%{name}/include
-   /%{_prefix}/%{name}/configure
+   /%{_prefix}/%{name}/bin
+   /%{_prefix}/%{name}/lib
+   /%{_prefix}/%{name}/docs
 
 %changelog
 
