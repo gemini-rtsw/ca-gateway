@@ -58,7 +58,7 @@ cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp RUN.txt $RPM_BUILD_ROOT/%{_prefix}/%{name}
-find $RPM_BUILD_ROOT/%{_prefix}/%{name}/configure -name ".git" -exec rm -rf {} \;
+find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
 
 %postun
 if [ "$1" = "0" ]; then
