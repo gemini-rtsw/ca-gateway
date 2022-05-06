@@ -57,7 +57,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp RUN.txt $RPM_BUILD_ROOT/%{_prefix}/%{name}
+cp -r scripts $RPM_BUILD_ROOT/%{_prefix}/%{name}
 find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
 
 %postun
@@ -74,12 +74,14 @@ rm -rf $RPM_BUILD_ROOT
    /%{_prefix}/%{name}/bin
    /%{_prefix}/%{name}/lib
    /%{_prefix}/%{name}/docs
+   /%{_prefix}/%{name}/scripts
 
 %files devel
 %defattr(-,root,root)
    /%{_prefix}/%{name}/bin
    /%{_prefix}/%{name}/lib
    /%{_prefix}/%{name}/docs
+   /%{_prefix}/%{name}/scripts
 
 %changelog
 
