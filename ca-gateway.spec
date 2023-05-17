@@ -5,6 +5,15 @@
 %define arch %(uname -m)
 %define checkout %(git log --pretty=format:'%h' -n 1) 
 
+
+# These defines need to be adjusted to point to the git ref
+# that is to be built
+
+# vendor/upstream git project
+%define vendor_project https://github.com/epics-extensions/ca-gateway.git
+# vendor git ref (tag or commit hash). Please keep in sync with 'Version' below!
+%define vendor_ref 6749981
+
 #These global defines are added to prevent stripping
 # symbols on vxWorks cross-compiled code
 # Getting 'strip' to work is probably only needed for
@@ -18,8 +27,8 @@
 
 Summary: %{name} Package, a module for EPICS base
 Name: %{name}
-Version: 4.3.13
-Release: 3%{?dist}
+Version: 2.1.3.6749981
+Release: 0%{?dist}
 License: EPICS Open License
 Group: Applications/Engineering
 Source0: %{name}-%{version}.tar.gz
@@ -46,11 +55,21 @@ This is the module %{name}.
 %setup -q 
 
 %build
+# get vendor code
+git clone %{vendor_project} vendor_project
+cd vendor_project
 
+# apply Gemini-specific configuration
+cp ../configure/RELEASE configure/
+
+# install 
 make distclean uninstall
 make
 
 %install
+# cd into the directory containing the vendor sources
+cd vendor_project
+
 export DONT_STRIP=1
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
