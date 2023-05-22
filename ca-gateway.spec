@@ -81,6 +81,7 @@ export DONT_STRIP=1
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
+cp -p ../scripts/ca-gateway.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
 find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
