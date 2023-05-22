@@ -85,6 +85,11 @@ cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
 find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
 
+%post
+if [ ! -d /var/log/ca_gateway ]; then
+    mkdir -p /var/log/ca_gateway
+fi
+
 %postun
 if [ "$1" = "0" ]; then
     rm -rf %{_prefix}/%{name}
