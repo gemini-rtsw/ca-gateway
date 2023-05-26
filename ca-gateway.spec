@@ -1,4 +1,4 @@
-%define _prefix /gem_base/epics/support
+%define _prefix /gem_base/epics/ioc
 %define name ca-gateway
 %define repository gemdev
 %define debug_package %{nil}
@@ -81,7 +81,8 @@ export DONT_STRIP=1
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp -p ../scripts/ca-gateway.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/
+cp -p ../scripts/ca-gateway.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/linux-x86_64/
+cp -r ../etc $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
 find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
@@ -91,9 +92,41 @@ if [ ! -d /var/log/ca_gateway ]; then
     mkdir -p /var/log/ca_gateway
 fi
 
+source /etc/profile
+# if upgrading, remove old systemd related files
+if [ "$1" == "2" ]; then
+	manage-procs remove -f %{name}
+    
+    # delete file copied in during installation
+    rm -f /etc/systemd/system/procserv-%{name}.service
+
+	manage-procs write-procs-cf
+fi
+# install systemd files
+manage-procs add -f -C %{_prefix}/%{name}/bin/linux-x86_64 -e LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%{_prefix}/%{name}/lib/linux-x86_64  -Uroot -Groot %{name} ca-gateway.sh
+
+if [ ! -d /etc/conserver ]; then mkdir /etc/conserver ; fi; manage-procs write-procs-cf
+
+systemctl daemon-reload
+
+# disable autostarting of service at boot / container start
+systemctl disable procserv-%{name}.service
+# copy the unit file from the unknown dir to the system's one
+cp -f /etc/procServ.d/procserv-%{name}.service /etc/systemd/system/
+
+systemctl restart conserver
+
 %postun
 if [ "$1" = "0" ]; then
-    rm -rf %{_prefix}/%{name}
+	manage-procs remove -f %{name}
+        
+    # delete file copied in during installation
+    rm -f /etc/systemd/system/procserv-%{name}.service
+    
+	manage-procs write-procs-cf
+	rm -rf %{_prefix}/%{name}
+	systemctl daemon-reload
+	systemctl restart conserver
 fi
 
 
@@ -103,6 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
    /%{_prefix}/%{name}/bin
+%config(noreplace)   /%{_prefix}/%{name}/etc/tcs-ip.conf
 
 %files devel
 %defattr(-,root,root)

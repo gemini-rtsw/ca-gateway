@@ -1,8 +1,29 @@
-#!/bin/sh
+#!/bin/bash
 
-/gem_base/bin/gateway -pvlist /gem_base/etc/rtconfig/cagateway/GATEWAY.pvlist \
+# evaluate hostname and set TCS IP depending on the beginning
+# (simulation or production env, depending on site and sbf/hbf or mko/cpo)
+source "$(dirname $0)/../etc/tcs-ip.conf"
+
+HBF=$(hostname |egrep '^hbf')
+SBF=$(hostname |egrep '^sbf')
+MKO=$(hostname |egrep '^mko')
+CPO=$(hostname |egrep '^cpo')
+
+if [ "$HBF" != "" ]; then
+  TCS_IP=$HBF_TCS_IP
+elif [ "$SBF" != "" ]; then
+  TCS_IP=$SBF_TCS_IP
+elif [ "$MKO" != "" ]; then
+  TCS_IP=$MKO_TCS_IP
+elif [ "$CPO" != "" ]; then
+  TCS_IP=$CPO_TCS_IP
+else
+  TCS_IP=$DEFAULT_IP
+fi
+
+$(dirname $0)/../bin/gateway -pvlist /gem_base/etc/rtconfig/cagateway/GATEWAY.pvlist \
                       -access /gem_base/etc/rtconfig/cagateway/GATEWAY.access \
                       -log /var/log/ca-gateway/tcsgateway.log \
                       -prefix tcsgate -archive -no_cache -debug 1 \
-                      -cip ${CA_IP} -report /var/log/ca-gateway/gateway.txt -prefix gateway
+                      -cip ${TCS_IP} -report /var/log/ca-gateway/gateway.txt -prefix gateway
 
