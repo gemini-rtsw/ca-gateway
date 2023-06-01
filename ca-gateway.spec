@@ -81,15 +81,15 @@ export DONT_STRIP=1
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp -p ../scripts/ca-gateway.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/linux-x86_64/
+cp -p ../scripts/linux-x86_64/ca-gateway.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/linux-x86_64/
 cp -r ../etc $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
 find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
 
 %post
-if [ ! -d /var/log/ca_gateway ]; then
-    mkdir -p /var/log/ca_gateway
+if [ ! -d /var/log/ca-gateway ]; then
+    mkdir -p /var/log/ca-gateway
 fi
 
 source /etc/profile
@@ -113,6 +113,8 @@ systemctl daemon-reload
 systemctl disable procserv-%{name}.service
 # copy the unit file from the unknown dir to the system's one
 cp -f /etc/procServ.d/procserv-%{name}.service /etc/systemd/system/
+
+systemctl daemon-reload
 
 systemctl restart conserver
 
