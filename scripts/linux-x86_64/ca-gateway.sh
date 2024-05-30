@@ -27,17 +27,17 @@ $(dirname $0)/../../bin/linux-x86_64/gateway -pvlist /gem_conf/rt/cagateway/GATE
                       -access /gem_conf/rt/cagateway/GATEWAY.access \
                       -log /var/log/ca-gateway/gengateway.log \
                       -prefix gengate -archive -no_cache -debug 1 \
-                      -cip "${GEN_IP}" -report /var/log/ca-gateway/gengateway.txt 
+                      -cip "${GEN_IP}" -report /var/log/ca-gateway/gengateway.txt &
 
 $(dirname $0)/../../bin/linux-x86_64/gateway -pvlist /gem_conf/rt/cagateway/GATEWAY-TCS.pvlist \
                       -access /gem_conf/rt/cagateway/GATEWAY.access \
                       -log /var/log/ca-gateway/tcsgateway.log \
                       -prefix tcssgate -archive -no_cache -debug 1 \
-                      -cip "${TCS_IP}" -report /var/log/ca-gateway/tcsgateway.txt 
+                      -cip "${TCS_IP}" -report /var/log/ca-gateway/tcsgateway.txt &
 
 $(dirname $0)/../../bin/linux-x86_64/gateway -pvlist /gem_conf/rt/cagateway/GATEWAY-AG.pvlist \
                       -access /gem_conf/rt/cagateway/GATEWAY.access \
                       -log /var/log/ca-gateway/AGgateway.log \
                       -prefix aggate -archive -no_cache -debug 1 \
-                      -cip "${AG_IP}" -report /var/log/ca-gateway/aggateway.txt 
+                      -cip "${AG_IP}" -report /var/log/ca-gateway/aggateway.txt &
 
