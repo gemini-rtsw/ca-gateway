@@ -82,6 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -p ../scripts/linux-x86_64/ca-gateway.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/linux-x86_64/
+cp -p ../scripts/linux-x86_64/ca-gateway-TCS.sh $RPM_BUILD_ROOT/%{_prefix}/%{name}/bin/linux-x86_64/
 cp -r ../etc $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
@@ -99,11 +100,13 @@ if [ "$1" == "2" ]; then
     
     # delete file copied in during installation
     rm -f /etc/systemd/system/procserv-%{name}.service
+    rm -f /etc/systemd/system/procserv-%{name}-TCS.service
 
 	manage-procs write-procs-cf
 fi
 # install systemd files
 manage-procs add -f -C %{_prefix}/%{name}/bin/linux-x86_64 -e LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%{_prefix}/%{name}/lib/linux-x86_64  -Uroot -Groot %{name} ca-gateway.sh
+manage-procs add -f -C %{_prefix}/%{name}/bin/linux-x86_64 -e LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%{_prefix}/%{name}/lib/linux-x86_64  -Uroot -Groot %{name} ca-gateway-TCS.sh
 
 if [ ! -d /etc/conserver ]; then mkdir /etc/conserver ; fi; manage-procs write-procs-cf
 
@@ -111,8 +114,10 @@ systemctl daemon-reload
 
 # disable autostarting of service at boot / container start
 systemctl disable procserv-%{name}.service
+systemctl disable procserv-%{name}-TCS.service
 # copy the unit file from the unknown dir to the system's one
 cp -f /etc/procServ.d/procserv-%{name}.service /etc/systemd/system/
+cp -f /etc/procServ.d/procserv-%{name}-TCS.service /etc/systemd/system/
 
 systemctl daemon-reload
 
@@ -124,6 +129,7 @@ if [ "$1" = "0" ]; then
         
     # delete file copied in during installation
     rm -f /etc/systemd/system/procserv-%{name}.service
+    rm -f /etc/systemd/system/procserv-%{name}-TCS.service
     
 	manage-procs write-procs-cf
 	rm -rf %{_prefix}/%{name}
