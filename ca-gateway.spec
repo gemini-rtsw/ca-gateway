@@ -114,8 +114,8 @@ if [ ! -d /etc/conserver ]; then mkdir /etc/conserver ; fi; manage-procs write-p
 systemctl daemon-reload
 
 # disable autostarting of service at boot / container start
-systemctl disable procserv-%{name}.service
-systemctl disable procserv-%{name}-TCS.service
+#systemctl disable procserv-%{name}.service
+#systemctl disable procserv-%{name}-TCS.service
 # copy the unit file from the unknown dir to the system's one
 cp -f /etc/procServ.d/procserv-%{name}.service /etc/systemd/system/
 cp -f /etc/procServ.d/procserv-%{name}-TCS.service /etc/systemd/system/
