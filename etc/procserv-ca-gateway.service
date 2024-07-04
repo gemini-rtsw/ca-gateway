@@ -6,7 +6,7 @@ ConditionPathIsDirectory=/gem_base/epics/ioc/ca-gateway
 [Service]
 Type=simple
 Environment="LD_LIBRARY_PATH=:/gem_base/epics/ioc/ca-gateway/lib/linux-x86_64"
-ExecStart=/bin/procServ --foreground --logfile - --name ca-gateway --ignore ^D^C^] --logoutcmd ^D --chdir /gem_base/epics/ioc/ca-gateway --info-file /run/procserv-ca-gateway/info --port 1235 --allow /gem_base/epics/ioc/ca-gateway/bin/linux-x86_64/ca-gateway.sh
+ExecStart=/bin/procServ --foreground --logfile - --name ca-gateway --ignore ^D^C^] --logoutcmd ^D --chdir /gem_base/epics/ioc/ca-gateway --info-file /run/procserv-ca-gateway/info --port 1235 --allow /gem_base/epics/ioc/ca-gateway/bin/linux-x86_64/gateway -pvlist /gem_conf/rt/cagateway/GATEWAY.pvlist -access /gem_conf/rt/cagateway/GATEWAY.access -log /var/log/ca-gateway/gengateway.log -prefix gengate -archive -no_cache -debug 0 -cip "172.17.2.31 172.17.2.30 172.17.2.37 172.17.2.35 172.17.2.48 172.17.2.33 172.17.2.32 172.17.2.62" -report /var/log/ca-gateway/gengateway.txt
 RuntimeDirectory=procserv-ca-gateway
 StandardOutput=syslog
 StandardError=inherit
