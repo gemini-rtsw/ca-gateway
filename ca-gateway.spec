@@ -78,14 +78,9 @@ fi
 cp -f %{_prefix}/%{name}/etc/procserv-%{name}.service /etc/systemd/system/
 cp -f %{_prefix}/%{name}/etc/procserv-%{name}-TCS.service /etc/systemd/system/
 systemctl daemon-reload
-systemctl disable procserv-%{name}.service
-systemctl disable procserv-%{name}-TCS.service
 
 %preun
-# disable and stop the service before uninstalling
-systemctl disable procserv-%{name}.service
-systemctl disable procserv-%{name}-TCS.service
-
+# Stop the service before uninstalling
 systemctl stop procserv-%{name}.service
 systemctl stop procserv-%{name}-TCS.service
 
