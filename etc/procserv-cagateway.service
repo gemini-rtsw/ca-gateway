@@ -1,0 +1,19 @@
+[Unit]
+Description=procServ for ca-gateway
+After=network.target remote-fs.target
+ConditionPathIsDirectory=/gem_base/epics/ioc/ca-gateway
+
+[Service]
+Type=simple
+Environment="LD_LIBRARY_PATH=:/gem_base/epics/ioc/ca-gateway/lib/linux-x86_64"
+ExecStart=/bin/procServ --foreground --logfile - --name ca-gateway --ignore ^D^C^] --logoutcmd ^D --chdir /gem_base/epics/ioc/ca-gateway --info-file /run/procserv-ca-gateway/info --port 1235 --allow /gem_base/epics/ioc/ca-gateway/bin/linux-x86_64/ca-gateway.sh
+RuntimeDirectory=procserv-ca-gateway
+StandardOutput=syslog
+StandardError=inherit
+SyslogIdentifier=procserv-cagateway
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
