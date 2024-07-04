@@ -44,21 +44,6 @@ Requires: epics-base pcas
 %description
 This is the module %{name}.
 
-## If you want to have a devel-package to be generated uncomment the following:
-%package devel
-Summary: %{name}-devel Package
-Group: Development/Gemini
-Requires: %{name}
-%description devel
-This is the module %{name}.
-
-%package doc
-Summary: %{name}-doc Package
-Group: Development/Gemini
-Requires: %{name}
-%description doc
-This is the module %{name} containing the documentation.
-
 %prep
 %setup -q 
 
@@ -123,14 +108,6 @@ rm -rf $RPM_BUILD_ROOT
    /%{_prefix}/%{name}/bin
    /%{_prefix}/%{name}/etc
 %config(noreplace)   /%{_prefix}/%{name}/etc/tcs-ip.conf
-
-%files devel
-%defattr(-,root,root)
-   /%{_prefix}/%{name}/lib
-
-%files doc
-%defattr(-,root,root)
-   /%{_prefix}/%{name}/docs
 
 %changelog
 
