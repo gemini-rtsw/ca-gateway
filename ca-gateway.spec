@@ -83,8 +83,6 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r bin $RPM_BUILD_ROOT/%{_prefix}/%{name}
 cp -r ../etc $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp -r lib $RPM_BUILD_ROOT/%{_prefix}/%{name}
-cp -r docs $RPM_BUILD_ROOT/%{_prefix}/%{name}
 find $RPM_BUILD_ROOT/%{_prefix}/%{name} -name ".git" -exec rm -rf {} \;
 
 %post
@@ -92,8 +90,8 @@ if [ ! -d /var/log/ca-gateway ]; then
     mkdir -p /var/log/ca-gateway
 fi
 
-cp -f %{_prefix}/%{name}/data/procserv-%{name}.service /etc/systemd/system/
-cp -f %{_prefix}/%{name}/data/procserv-%{name}-TCS.service /etc/systemd/system/
+cp -f %{_prefix}/%{name}/etc/procserv-%{name}.service /etc/systemd/system/
+cp -f %{_prefix}/%{name}/etc/procserv-%{name}-TCS.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl disable procserv-%{name}.service
 systemctl disable procserv-%{name}-TCS.service
@@ -123,6 +121,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
    /%{_prefix}/%{name}/bin
+   /%{_prefix}/%{name}/etc
 %config(noreplace)   /%{_prefix}/%{name}/etc/tcs-ip.conf
 
 %files devel
