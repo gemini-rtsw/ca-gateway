@@ -75,22 +75,22 @@ if [ ! -d /var/log/ca-gateway ]; then
     mkdir -p /var/log/ca-gateway
 fi
 
-cp -f %{_prefix}/%{name}/etc/procserv-%{name}.service /etc/systemd/system/
-cp -f %{_prefix}/%{name}/etc/procserv-%{name}-TCS.service /etc/systemd/system/
+cp -f %{_prefix}/%{name}/etc/procserv-%{name}-mk.service /etc/systemd/system/
+cp -f %{_prefix}/%{name}/etc/procserv-%{name}-cp.service /etc/systemd/system/
 systemctl daemon-reload
 
 %preun
 # Stop the service before uninstalling
-systemctl stop procserv-%{name}.service
-systemctl stop procserv-%{name}-TCS.service
+systemctl stop procserv-%{name}-mk.service
+systemctl stop procserv-%{name}-cp.service
 
 %postun
 # remove the service file and reload if not upgrading
 if [ "$1" = "0" ]; then
         
     # delete file copied in during installation
-    rm -f /etc/systemd/system/procserv-%{name}.service
-    rm -f /etc/systemd/system/procserv-%{name}-TCS.service
+    rm -f /etc/systemd/system/procserv-%{name}-mk.service
+    rm -f /etc/systemd/system/procserv-%{name}-cp.service
     
 fi
 
@@ -102,7 +102,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
    /%{_prefix}/%{name}/bin
    /%{_prefix}/%{name}/etc
-%config(noreplace)   /%{_prefix}/%{name}/etc/tcs-ip.conf
 
 %changelog
 
