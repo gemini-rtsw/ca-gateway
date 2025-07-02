@@ -1,10 +1,12 @@
-%define _prefix /gem_base/epics/ioc
-%define name ca-gateway
-%define repository gemdev
 %define debug_package %{nil}
+%define _build_id_links none
+%define name ca-gateway
+%define version 2.1.3.6749981
+%define repository gemdev
+%define _prefix /gem_base/epics/ioc
 %define arch %(uname -m)
-%define checkout %(git log --pretty=format:'%h' -n 1) 
-
+%define checkout %(git log --pretty=format:'%h' -n 1)
+%define git_hash %(git rev-parse --short HEAD 2>/dev/null || echo "nogit")
 
 # These defines need to be adjusted to point to the git ref
 # that is to be built
@@ -27,8 +29,8 @@
 
 Summary: %{name} Package, a module for EPICS base
 Name: %{name}
-Version: 2.1.3.6749981
-Release: 0%{?dist}
+Version: %{version}
+Release: 8.git%{git_hash}%{?dist}
 License: EPICS Open License
 Group: Applications/Engineering
 Source0: %{name}-%{version}.tar.gz

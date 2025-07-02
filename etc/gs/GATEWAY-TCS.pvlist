@@ -1,0 +1,191 @@
+# Valid forms of the lines in this file:
+#
+#  1) EVALUATION          ORDER   <eval_order>
+#  2) <pv_name_pattern>   DENY    [FROM] [<host> ...]
+#  3) <pv_name_pattern>   ALIAS   <real_pv_name> [<asg> [<asl>]]
+#  4) <pv_name_pattern>   ALLOW   [<asg> [<asl>]]
+#
+# where:
+#        <eval_order>      = DENY, ALLOW      allow rules take precedence
+#                            ALLOW, DENY      deny rules take precedence (default)
+#        <pv_name_pattern> = regular expression that matches PV names
+#        <host>            = unqualified host name
+#        <real_pv_name>  = substitution pattern that specifies the real PV name
+#                            (\0 ... \9 are replaced by matched sub-expressions)
+#        <asg>             = Access Security Group as specified in AS file   [DEFAULT]
+#        <asl>             = Access Security Level (0 or 1)                  [1]
+#        
+#
+# ORDER:
+#  This will set the evaluation order that is used when a client requests
+#  a PV. Setting this to "DENY, ALLOW" will allow access to a PV name that matches
+#  both a DENY and an ALLOW pattern. "ALLOW, DENY" will make a DENY override an ALLOW
+#  for the same variable. (This is the default.)
+#  NOTE: Matching DENY FROM patterns (with host names) will always override matching
+#        ALLOW patterns.
+#
+# DENY / DENY FROM:
+#  The gateway will completely ignore requests for any PV that matches the pattern.
+#  Can be used to block the gateway from responding to groups of PVs.
+#  Naming hosts (DENY FROM) will block the PVs only for the given hosts (useful to
+#  prevent loops caused by forwarding to other gateways).
+#
+# ALIAS:
+#  Define an alias and allows it as a pattern for names which the Gateway should serve.
+#  For process variable names that match <pv-name-pattern>, the Gateway translates the
+#  name into a real process variable name and uses the real name as if it had been the
+#  one specified. The <real-pv-name> may contain the special escape sequences \1 ... \9
+#  which will be replaced by the nth subexpression matched. See a UNIX book on regular
+#  expressions for more information. Access security rules to be used for process
+#  variables matched by this pattern may be specified. If not specified, the defaults
+#  are the DEFAULT group and level 1. Apart from specifying an alias, this rule is
+#  functionally the same as ALLOW.
+#
+# ALLOW:
+#  Used to declare PV names which the Gateway should serve.  Access security rules to
+#  be used for process variables matched by this pattern may be specified. If not
+#  specified, the defaults are the DEFAULT group and level 1.
+#
+# Notes:
+#  1) Commands are not case sensitive.
+#  2) Pattern use GNU-style regular expressions. (See the documentation included
+#     with the regex library for details on regular expressions.)
+#  3) Any PV not included in an ALLOW command is not allowed access. If no PV list
+#     file is specified on the command line, a default rule ".* ALLOW" will be created.
+#  4) The patterns are matched in reverse order. I.e. you should always specify general
+#     rules before specific rules.
+#  5) See EPICS access security documentation for creating an access security
+#     file for the PV gateway.
+#
+# Below:
+#  - make DENY rules override ALLOW rules
+#  - requests for PVs starting with Beam: will be allowed according to rules for access
+#    security group Beam, similarly for PS using PowerSupply and gateway flags using
+#    GatewayAdmin
+#  - anything starting with test is not allowed
+#  - ps0 ... ps9 are translated to PSCurrent0.ai ... PSCurrent9.ai and are allowed for
+#    the PowerSupply group at level 1.
+
+
+EVALUATION ORDER ALLOW, DENY
+
+#[0-9].*          ALLOW
+#[a-z].*          ALLOW
+#[A-Z].*          ALLOW
+
+gateway.* ALLOW DEFAULT
+tcs:.* ALLOW OP
+tcs:.* ALLOW DEFAULT
+tcs:.* DENY FROM 172.17.44.50 # CERRO TELOPS
+tcs:.* DENY FROM 172.17.44.51
+tcs:.* DENY FROM 172.17.44.52
+tcs:.* DENY FROM 172.17.44.53
+tcs:.* DENY FROM 172.17.44.54
+tcs:.* DENY FROM 172.17.44.55
+tcs:.* DENY FROM 172.17.44.56
+tcs:.* DENY FROM 172.16.44.50 # SBF TELOPS
+tcs:.* DENY FROM 172.16.44.51
+tcs:.* DENY FROM 172.16.44.52
+tcs:.* DENY FROM 172.16.44.53
+tcs:.* DENY FROM 172.16.44.54
+tcs:.* DENY FROM 172.16.44.55
+tcs:.* DENY FROM 172.17.44.111 # WEB-SEQEXEC
+tcs:.* DENY FROM 172.17.44.112 # WEB-SEQEXEC
+tcs:.* DENY FROM 172.17.44.113 # WEB-SEQEXEC
+
+tcs:.* DENY FROM 172.17.44.61  # cpomystops-lv1
+tcs:.* DENY FROM 172.17.65.100 # aom-vme
+tcs:.* DENY FROM 172.17.65.10  # cpomcao01 myst server
+tcs:.* DENY FROM 172.17.65.11  # cportcsioc-lv1
+tcs:.* DENY FROM 172.17.65.38  # mcao-rtc
+
+tcs:.* DENY FROM 172.17.2.101 # TIme Audit
+tcs:.* DENY FROM 172.17.2.30  # GIS
+tcs:.* DENY FROM 172.17.2.33  # CRCS
+tcs:.* DENY FROM 172.17.2.32  # MCS
+tcs:.* DENY FROM 172.17.2.37  # A&G
+tcs:.* DENY FROM 172.17.2.35  # SCS
+tcs:.* DENY FROM 172.17.2.151 # agSeq soft IOC
+tcs:.* DENY FROM 172.17.44.71 # vii
+tcs:.* DENY FROM 172.17.2.41 # GMOS OIWFS
+tcs:.* DENY FROM 172.17.102.138 # f2 OIWFS
+tcs:.* DENY FROM 172.17.102.130 # f2
+tcs:.* DENY FROM 172.27.70.102 # Observe
+tcs:.* DENY FROM 172.27.70.101 # navigate
+tcs:.* DENY FROM 172.27.44.111 # web-seqexec
+
+tcs:.* DENY FROM 172.16.73.94 #  sbfsciops-lv4
+
+tcs:.* DENY FROM 139.229.36.1
+tcs:.* DENY FROM 139.229.36.2
+tcs:.* DENY FROM 139.229.36.3
+tcs:.* DENY FROM 139.229.36.4
+tcs:.* DENY FROM 139.229.36.5
+tcs:.* DENY FROM 139.229.36.6
+tcs:.* DENY FROM 139.229.36.7
+tcs:.* DENY FROM 139.229.36.8
+tcs:.* DENY FROM 139.229.36.9
+tcs:.* DENY FROM 139.229.36.10
+tcs:.* DENY FROM 139.229.36.11
+tcs:.* DENY FROM 139.229.36.12
+tcs:.* DENY FROM 139.229.36.13
+tcs:.* DENY FROM 139.229.36.14
+tcs:.* DENY FROM 139.229.36.15
+tcs:.* DENY FROM 139.229.36.16
+tcs:.* DENY FROM 139.229.36.17
+tcs:.* DENY FROM 139.229.36.18
+tcs:.* DENY FROM 139.229.36.19
+tcs:.* DENY FROM 139.229.36.20
+tcs:.* DENY FROM 139.229.36.21
+tcs:.* DENY FROM 139.229.36.22
+tcs:.* DENY FROM 139.229.36.23
+tcs:.* DENY FROM 139.229.36.24
+tcs:.* DENY FROM 139.229.36.25
+tcs:.* DENY FROM 139.229.36.26
+tcs:.* DENY FROM 139.229.36.27
+tcs:.* DENY FROM 139.229.36.28
+tcs:.* DENY FROM 139.229.36.29
+tcs:.* DENY FROM 139.229.36.30
+tcs:.* DENY FROM 139.229.36.31
+tcs:.* DENY FROM 139.229.36.32
+tcs:.* DENY FROM 139.229.36.33
+tcs:.* DENY FROM 139.229.36.34
+tcs:.* DENY FROM 139.229.36.35
+tcs:.* DENY FROM 139.229.36.36
+tcs:.* DENY FROM 139.229.36.37
+tcs:.* DENY FROM 139.229.36.38
+tcs:.* DENY FROM 139.229.36.39
+tcs:.* DENY FROM 139.229.36.40
+tcs:.* DENY FROM 139.229.36.41
+tcs:.* DENY FROM 139.229.36.42
+tcs:.* DENY FROM 139.229.36.43
+tcs:.* DENY FROM 139.229.36.44
+tcs:.* DENY FROM 139.229.36.45
+tcs:.* DENY FROM 139.229.36.46
+tcs:.* DENY FROM 139.229.36.47
+tcs:.* DENY FROM 139.229.36.48
+tcs:.* DENY FROM 139.229.36.49
+tcs:.* DENY FROM 139.229.36.50
+tcs:.* DENY FROM 139.229.36.51
+tcs:.* DENY FROM 139.229.36.52
+tcs:.* DENY FROM 139.229.36.53
+tcs:.* DENY FROM 139.229.36.54
+tcs:.* DENY FROM 139.229.36.55
+tcs:.* DENY FROM 139.229.36.56
+tcs:.* DENY FROM 139.229.36.57
+tcs:.* DENY FROM 139.229.36.58
+tcs:.* DENY FROM 139.229.36.59
+tcs:.* DENY FROM 139.229.36.60
+tcs:.* DENY FROM 139.229.36.61
+tcs:.* DENY FROM 139.229.36.62
+tcs:.* DENY FROM 139.229.36.63
+tcs:.* DENY FROM 139.229.36.64
+tcs:.* DENY FROM 139.229.36.65
+tcs:.* DENY FROM 139.229.36.66
+tcs:.* DENY FROM 139.229.36.67
+tcs:.* DENY FROM 139.229.36.68
+tcs:.* DENY FROM 139.229.36.69
+tcs:.* DENY FROM 139.229.36.70
+
+tcs:.* DENY FROM 172.16.44.81    #sbf testing machine
+

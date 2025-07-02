@@ -1,0 +1,24 @@
+UAG(op) {telops,gemvx}
+UAG(gem) {gemvx,software,telops}
+ASG(DEFAULT) {
+   RULE(1,READ)
+   RULE(1,WRITE)
+}
+
+ASG(GEM) {
+   RULE(1,READ) {
+        UAG(gem)
+   }
+   RULE(1,WRITE) {
+        UAG(gem)
+   }
+}
+
+ASG(OP) {
+   RULE(1,READ) {
+        UAG(op)
+   }
+   RULE(1,WRITE) {
+        UAG(op)
+   }
+}
