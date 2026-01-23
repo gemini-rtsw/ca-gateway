@@ -1,0 +1,75 @@
+EVALUATION ORDER ALLOW, DENY
+
+[0-9].*         ALLOW
+[a-z].*         ALLOW
+[A-Z].*         ALLOW
+
+gateway.* ALLOW DEFAULT
+tcs:.* ALLOW OP
+tcs:.* ALLOW DEFAULT
+
+# TELOPS
+tcs:.* DENY FROM 10.1.44.50 # HBF TELOPS
+tcs:.* DENY FROM 10.1.44.15
+tcs:.* DENY FROM 10.1.44.51
+tcs:.* DENY FROM 10.1.44.52
+tcs:.* DENY FROM 10.1.44.53
+tcs:.* DENY FROM 10.1.44.54
+tcs:.* DENY FROM 10.1.44.55
+
+# MKO TELOPS (assuming similar structure to HBF)
+tcs:.* DENY FROM 10.2.44.59 # MKO TELOPS
+tcs:.* DENY FROM 10.2.44.60
+tcs:.* DENY FROM 10.2.44.61
+tcs:.* DENY FROM 10.2.44.62
+tcs:.* DENY FROM 10.2.44.63
+tcs:.* DENY FROM 10.2.44.64
+tcs:.* DENY FROM 10.2.44.65
+
+# WEB-SEQEXEC
+tcs:.* DENY FROM 10.2.44.111 # WEB-SEQEXEC
+tcs:.* DENY FROM 10.2.44.112 # WEB-SEQEXEC 
+tcs:.* DENY FROM 10.2.44.113 # WEB-SEQEXEC
+
+# Other systems
+tcs:.* DENY FROM 10.2.4.109 # Time Audit (mkogps-ap1)
+tcs:.* DENY FROM 10.2.2.108 # CRCS
+tcs:.* DENY FROM 10.2.2.105 # MCS
+tcs:.* DENY FROM 10.2.2.102 # A&G
+tcs:.* DENY FROM 10.2.2.107 # SCS
+tcs:.* DENY FROM 10.2.2.49 # agSeq soft IOC (assumed to be on mkosioc-lv1)
+tcs:.* DENY FROM 10.2.44.71 # mkoepicsgw-lv2
+#tcs:.* DENY FROM 10.2.2.121 # GMOS CC
+tcs:.* DENY FROM 10.1.71.12 # hbf testing machine (hbfrtdev-ld2)
+
+# Additional systems from your list
+#tcs:.* DENY FROM 10.2.2.116 # NIRI CC
+#tcs:.* DENY FROM 10.2.2.92 # NIFS CC
+#tcs:.* DENY FROM 10.2.2.87 # GNIRS CC
+#tcs:.* DENY FROM 10.2.2.233 # Altair IOC
+#tcs:.* DENY FROM 10.2.2.247 # mkoepicsgw
+tcs:.* DENY FROM 10.2.2.100 # GIS
+tcs:.* DENY FROM 10.2.2.103 # GCAL
+tcs:.* DENY FROM 10.2.2.101 # ECS
+tcs:.* DENY FROM 10.2.2.106 # PCS
+tcs:.* DENY FROM 10.2.2.31 # DHS1
+tcs:.* DENY FROM 10.2.2.41 # DHS2
+#tcs:.* DENY FROM 10.2.2.104 # TCS
+tcs:.* DENY FROM 10.2.2.111 # PWFS1
+tcs:.* DENY FROM 10.2.2.112 # PWFS2
+tcs:.* DENY FROM 10.2.2.110 # HRWFS
+tcs:.* DENY FROM 10.2.2.113 # OIWFS
+tcs:.* DENY FROM 10.2.197.11 # mkocatalog1
+tcs:.* DENY FROM 10.2.4.26 # mkocatalog-lv2
+#tcs:.* DENY FROM 10.2.2.141 # BTO Epics
+#tcs:.* DENY FROM 10.2.2.142 # BTO FSA
+tcs:.* DENY FROM 10.2.2.239 # SFO
+tcs:.* DENY FROM 10.2.2.47 # LHX
+tcs:.* DENY FROM 10.2.5.43 # TBAD
+tcs:.* DENY FROM 10.2.44.20 # MKO TSRS
+tcs:.* DENY FROM 10.1.14.25 # HBF TSRS
+tcs:.* DENY FROM 10.2.4.47 #m1
+tcs:.* DENY FROM 10.1.44.52 #Wall 
+
+# GPP Server
+tcs:.* DENY FROM 10.2.71.38

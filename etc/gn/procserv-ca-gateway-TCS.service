@@ -1,0 +1,21 @@
+[Unit]
+Description=procServ for ca-gateway-TCS
+After=network.target remote-fs.target
+ConditionPathIsDirectory=/gem_base/epics/ioc/ca-gateway
+
+[Service]
+Type=simple
+Environment="LD_LIBRARY_PATH=:/gem_base/epics/ioc/ca-gateway/lib/linux-x86_64"
+#Environment="EPICS_CA_AUTO_ADDR_LIST=NO"
+#Environment="EPICS_CA_ADDR_LIST=10.2.2.104 10.2.2.87 10.2.2.92 10.2.2.116 10.2.2.141 10.2.2.142 10.2.2.247"
+ExecStart=/bin/procServ --foreground --logfile - --name ca-gateway-tcs --ignore ^D^C^] --logoutcmd ^D --chdir /gem_base/epics/ioc/ca-gateway --info-file /run/procserv-ca-gateway-tcs/info --port 1237 --allow /gem_base/epics/ioc/ca-gateway/bin/linux-x86_64/gateway -pvlist /gem_conf/rt/cagateway/GATEWAY-TCS.pvlist -access /gem_conf/rt/cagateway/GATEWAY-TCS.access -log /var/log/ca-gateway/tcsgateway.log -prefix tcssgate -archive -no_cache -debug 0 -cip "10.2.2.116 10.2.2.117 10.2.2.118 10.2.2.91 10.2.2.92 10.2.2.87 10.2.2.83 10.2.2.84 10.2.2.233 10.2.2.104 10.2.2.141 10.2.2.142 10.2.2.121 10.2.2.247 10.2.126.101 10.2.2.36" -sip 0.0.0.0 -report /var/log/ca-gateway/tcsgateway.txt
+RuntimeDirectory=procserv-ca-gateway-TCS
+StandardOutput=syslog
+StandardError=inherit
+SyslogIdentifier=procserv-ca-gateway-TCS
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
