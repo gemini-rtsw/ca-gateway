@@ -50,6 +50,8 @@ This is the module %{name}.
 %setup -q 
 
 %build
+# Debug: find EPICS base location
+rpm -ql epics-base-devel | head -20
 # get vendor code
 git clone %{vendor_project} vendor_project
 cd vendor_project
