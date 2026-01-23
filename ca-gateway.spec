@@ -58,7 +58,6 @@ cd vendor_project
 cp ../configure/RELEASE configure/
 
 # install 
-make distclean uninstall
 make
 
 %install
