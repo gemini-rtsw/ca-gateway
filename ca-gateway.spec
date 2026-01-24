@@ -38,7 +38,8 @@ ExclusiveArch: %{arch}
 Prefix: %{_prefix}
 ## You may specify dependencies here
 ## BuildRequires: epics-base-devel re2c gemini-ade psmisc pcas-devel
-BuildRequires: epics-base-devel re2c gemini-ade pcas-devel
+#BuildRequires: epics-base-devel re2c gemini-ade pcas-devel
+BuildRequires: epics-base-devel re2c gemini-ade
 Requires: epics-base pcas
 ## Switch dependency checking off
 # AutoReqProv: no
@@ -51,7 +52,7 @@ This is the module %{name}.
 
 %build
 # Debug: find EPICS base location
-rpm -ql epics-base-devel | head -20
+#rpm -ql epics-base-devel | head -20
 # get vendor code
 git clone %{vendor_project} vendor_project
 cd vendor_project
