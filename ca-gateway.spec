@@ -7,7 +7,11 @@
 %define arch %(uname -m)
 %define checkout %(git log --pretty=format:'%h' -n 1)
 %define git_hash %(git rev-parse --short HEAD 2>/dev/null || echo "nogit")
+
+# Location and gateway type definitions, define the correct site mk or cp
+# Then define the gateway type vme (changes top from **v:) or inst (TCS<->instruments)
 %define site_location mk
+%define gateway_type vme
 
 # These defines need to be adjusted to point to the git ref
 # that is to be built
@@ -77,19 +81,31 @@ if [ ! -d /var/log/ca-gateway ]; then
     mkdir -p /var/log/ca-gateway
 fi
 
+%if "%{gateway_type}" == "vme"
 cp -f %{_prefix}/%{name}/etc/%{site_location}/procserv-%{name}.service /etc/systemd/system/
+%else
+cp -f %{_prefix}/%{name}/etc/%{site_location}/procserv-%{name}-TCS.service /etc/systemd/system/
+%endif
 systemctl daemon-reload
 
 %preun
 # Stop the service before uninstalling
+%if "%{gateway_type}" == "vme"
 systemctl stop procserv-%{name}.service
+%else
+systemctl stop procserv-%{name}-TCS.service
+%endif
 
 %postun
 # remove the service file and reload if not upgrading
 if [ "$1" = "0" ]; then
         
     # delete file copied in during installation
+%if "%{gateway_type}" == "vme"
     rm -f /etc/systemd/system/procserv-%{name}.service
+%else
+    rm -f /etc/systemd/system/procserv-%{name}-TCS.service
+%endif
     
 fi
 
