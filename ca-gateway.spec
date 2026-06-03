@@ -77,31 +77,19 @@ if [ ! -d /var/log/ca-gateway ]; then
     mkdir -p /var/log/ca-gateway
 fi
 
-%if "%{site_location}" == "mk"
-cp -f %{_prefix}/%{name}/etc/procserv-%{name}-mk.service /etc/systemd/system/
-%else
-cp -f %{_prefix}/%{name}/etc/procserv-%{name}-cp.service /etc/systemd/system/
-%endif
+cp -f %{_prefix}/%{name}/etc/%{site_location}/procserv-%{name}.service /etc/systemd/system/
 systemctl daemon-reload
 
 %preun
 # Stop the service before uninstalling
-%if "%{site_location}" == "mk"
-systemctl stop procserv-%{name}-mk.service
-%else
-systemctl stop procserv-%{name}-cp.service
-%endif
+systemctl stop procserv-%{name}.service
 
 %postun
 # remove the service file and reload if not upgrading
 if [ "$1" = "0" ]; then
         
     # delete file copied in during installation
-%if "%{site_location}" == "mk"
-    rm -f /etc/systemd/system/procserv-%{name}-mk.service
-%else
-    rm -f /etc/systemd/system/procserv-%{name}-cp.service
-%endif
+    rm -f /etc/systemd/system/procserv-%{name}.service
     
 fi
 
