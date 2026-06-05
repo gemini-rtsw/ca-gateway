@@ -1,0 +1,27 @@
+#EVALUATION ORDER ALLOW, DENY
+#
+[0-9].*         ALLOW
+[a-z].*         ALLOW
+[A-Z].*         ALLOW
+
+#ec:\(.*\)       ALIAS     ecv:\1
+#gis:\(.*\)      ALIAS     giv:\1
+#lis:\(.*\)      ALIAS     liv:\1
+
+#ag:\(.*\)      ALIAS     agv:\1
+#m2:\(.*\)      ALIAS     m2v:\1
+mc:\(.*\)      ALIAS     mcv:\1
+cr:\(.*\)      ALIAS     crv:\1
+#gc:\(.*\)      ALIAS     gcv:\1
+#pr:\(.*\)      ALIAS     prv:\1
+tcs:\(.*\)      ALIAS     tcv:\1
+
+hrwfs:\(.*\)      ALIAS     hrwfv:\1
+oiwfs:\(.*\)      ALIAS     oiwfv:\1
+
+gateway:.*Flag  ALLOW     GatewayAdmin
+
+gateway\.\(.*\)            ALIAS     gateway:\1
+gateway\.\(.*\)Flag        ALIAS     gateway:\1Flag          GatewayAdmin
+gateway\.alive             ALIAS     gateway:connected
+gateway\.postEventRate     ALIAS     gateway:clientPostRate
