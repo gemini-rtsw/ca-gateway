@@ -1,4 +1,3 @@
 [submodule "gemini-rtsw-ci"]
 	path = gemini-rtsw-ci
-	url = git@gitlab.com:nsf-noirlab/gemini/rtsw/user-tools/gemini-rtsw-ci.git
-	branch = main-el8
+	url = https://github.com/gemini-rtsw/gemini-rtsw-ci.git
