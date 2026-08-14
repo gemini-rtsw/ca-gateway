@@ -43,7 +43,7 @@ ExclusiveArch: %{arch}
 Prefix: %{_prefix}
 ## You may specify dependencies here
 ## BuildRequires: epics-base-devel re2c gemini-ade psmisc pcas-devel
-BuildRequires: epics-base-devel re2c gemini-ade pcas-devel
+BuildRequires: epics-base-devel = 7.0.7-0.git.054b1d4%{?dist} re2c gemini-ade pcas-devel
 Requires: epics-base pcas
 ## Switch dependency checking off
 # AutoReqProv: no
