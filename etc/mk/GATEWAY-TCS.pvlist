@@ -26,6 +26,13 @@ tcs:.* DENY FROM 10.2.44.63
 tcs:.* DENY FROM 10.2.44.64
 tcs:.* DENY FROM 10.2.44.65
 
+# VII server. Not covered by the MKO TELOPS range above -- that block was
+# extrapolated from HBF, and mkovii-lv1 falls outside it. Without this the
+# gateway answered vii's broadcast searches alongside mkotcsioc-lv2, and libca
+# logged "Identical process variable names on multiple servers" at every start,
+# binding whichever server replied first.
+tcs:.* DENY FROM 10.2.44.35 # mkovii-lv1 (VII server)
+
 # WEB-SEQEXEC
 tcs:.* DENY FROM 10.2.44.111 # WEB-SEQEXEC
 tcs:.* DENY FROM 10.2.44.112 # WEB-SEQEXEC 
