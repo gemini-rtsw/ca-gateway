@@ -83,8 +83,12 @@ fi
 
 %if "%{gateway_type}" == "vme"
 cp -f %{_prefix}/%{name}/etc/%{site_location}/procserv-%{name}.service /etc/systemd/system/
+cp -f %{_prefix}/%{name}/etc/%{site_location}/GATEWAY.access /gem_conf/rt/cagateway/
+cp -f %{_prefix}/%{name}/etc/%{site_location}/GATEWAY.pvlist /gem_conf/rt/cagateway/
 %else
 cp -f %{_prefix}/%{name}/etc/%{site_location}/procserv-%{name}-TCS.service /etc/systemd/system/
+cp -f %{_prefix}/%{name}/etc/%{site_location}/GATEWAY-TCS.access /gem_conf/rt/cagateway/
+cp -f %{_prefix}/%{name}/etc/%{site_location}/GATEWAY-TCS.pvlist /gem_conf/rt/cagateway/
 %endif
 systemctl daemon-reload
 
