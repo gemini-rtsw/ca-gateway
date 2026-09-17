@@ -1,0 +1,75 @@
+gateAs: initialise ASL so "ALLOW <asg>" without a level works
+
+readPvList() declares `int lev;` uninitialised and only assigns it when an
+ASL token is present, or when no ASG is given at all.  A pvlist line of the
+form
+
+    tcs:.* ALLOW DEFAULT
+
+(ASG present, ASL absent - the form the pvlist documentation describes as
+defaulting to level 1) takes neither branch, so the entry is created with an
+indeterminate level: carried over from the previous line, or read from
+uninitialised stack on the first such line.
+
+gateAsEntry::level is passed to asAddClient() as the client's access security
+level, and asLibRoutines.c skips any rule where
+`pasgclient->level > pasgrule->level`.  A level above 1 therefore causes every
+RULE(1,READ)/RULE(1,WRITE) to be skipped, and the gateway reports "no read, no
+write" to every client matching that pattern while still serving the PV
+normally - connected, correct native type and element count.  Which ASG the
+pvlist names makes no difference, so the fault is immune to access-file
+changes, survives restarts, and varies between process invocations.
+
+Observed in production: a gateway proxying a telescope control system denied
+all clients for four weeks after a host reboot, with no configuration change.
+Diagnosis was slow because both config files were correct and ascheck(1)
+reported no errors.
+
+Fix: initialise lev at declaration; reset it per line alongside the existing
+pattern/rname/hname reset; fall back to the documented default of 1 when no
+ASL token is present; and reject out-of-range values with a message instead of
+silently denying all access.
+
+Note the per-line reset is the substantive omission - the loop resets the
+three pointers each iteration but not the int, which is how a value leaks from
+one pvlist line to the next.
+
+Signed-off-by: Hawi Stecher <hawi.stecher@noirlab.edu>
+diff --git a/src/gateAs.cc b/src/gateAs.cc
+index 962347d..a0de5de 100644
+--- a/src/gateAs.cc
++++ b/src/gateAs.cc
+@@ -411,7 +411,7 @@ gateAsEntry* gateAs::findEntryInList(const char* pv, gateAsList& list) const
+ 
+ int gateAs::readPvList(const char* lfile)
+ {
+-	int lev;
++	int lev=1;
+ 	int line=0;
+ 	FILE* fd;
+ 	char inbuf[GATE_MAX_PVLIST_LINE_LENGTH];
+@@ -452,6 +452,7 @@ int gateAs::readPvList(const char* lfile)
+ 
+ 		++line;
+ 		pattern=rname=hname=NULL;
++		lev=1;
+ 
+ #ifdef USE_DENYFROM
+ 		//All deny from rules with host names will be conveted to ip addresses
+@@ -605,8 +606,14 @@ int gateAs::readPvList(const char* lfile)
+ 		}
+ 
+ 		if((asg=strtok(NULL," \t\n"))) {                           // ASG / ASL
+-			if((asl=strtok(NULL," \t\n")) &&
+-			  (sscanf(asl,"%d",&lev)!=1)) lev=1;
++			if(!(asl=strtok(NULL," \t\n")) ||
++			  sscanf(asl,"%d",&lev)!=1) {
++				lev=1;                    // no ASL given: documented default
++			} else if(lev<0 || lev>1) {
++				fprintf(stderr,"Error in PV list file (line %d): "
++				  "ASL must be 0 or 1, got '%s' - using 1\n",line,asl);
++				lev=1;
++			}
+ 		} else {
+ 			asg=(char*)default_group;
+ 			lev=1;

@@ -1,12 +1,6 @@
 EVALUATION ORDER ALLOW, DENY
-
-[0-9].*         ALLOW
-[a-z].*         ALLOW
-[A-Z].*         ALLOW
-
-gateway.* ALLOW DEFAULT
-tcs:.* ALLOW OP
-tcs:.* ALLOW DEFAULT
+gateway.* ALLOW DEFAULT 1
+tcs:.* ALLOW DEFAULT 1
 
 # TELOPS
 tcs:.* DENY FROM 10.1.44.50 # HBF TELOPS
@@ -25,7 +19,6 @@ tcs:.* DENY FROM 10.2.44.62
 tcs:.* DENY FROM 10.2.44.63
 tcs:.* DENY FROM 10.2.44.64
 tcs:.* DENY FROM 10.2.44.65
-
 
 # WEB-SEQEXEC
 tcs:.* DENY FROM 10.2.44.111 # WEB-SEQEXEC
@@ -82,3 +75,5 @@ tcs:.* DENY FROM 10.1.44.49
 # VII server
 tcs:.* DENY FROM 10.2.44.35
 
+# CA Snooper Server
+tcs:.* DENY FROM 10.2.2.249
